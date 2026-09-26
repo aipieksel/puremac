@@ -11,15 +11,6 @@ Maintained by [aipieksel](https://github.com/aipieksel). Upstream credits and li
   <img src="screenshots/breakdown.png" alt="PureMac scan results — by-category breakdown chart" width="820">
 </p>
 
-<p align="center">
-  <b>English</b> |
-  <a href="docs/README.ar.md">العربية</a> |
-  <a href="docs/README.es.md">Español</a> |
-  <a href="docs/README.ja.md">日本語</a> |
-  <a href="docs/README.zh-Hans.md">简体中文</a> |
-  <a href="docs/README.zh-Hant.md">繁體中文</a>
-</p>
-
 <h1 align="center">PureMac</h1>
 
 <p align="center">
@@ -28,12 +19,8 @@ Maintained by [aipieksel](https://github.com/aipieksel). Upstream credits and li
 </p>
 
 <p align="center">
-  <a href="https://github.com/momenbasel/PureMac/releases/latest"><img src="https://img.shields.io/github/v/release/momenbasel/PureMac?style=flat-square&label=Download" alt="Latest Release"></a>
   <img src="https://img.shields.io/badge/macOS-13.0+-blue?style=flat-square" alt="macOS 13.0+">
   <img src="https://img.shields.io/badge/telemetry-none-success?style=flat-square" alt="No telemetry">
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/momenbasel/PureMac?style=flat-square" alt="MIT License"></a>
-  <a href="https://github.com/momenbasel/PureMac/stargazers"><img src="https://img.shields.io/github/stars/momenbasel/PureMac?style=flat-square" alt="Stars"></a>
-  <a href="https://github.com/momenbasel/PureMac/releases"><img src="https://img.shields.io/github/downloads/momenbasel/PureMac/total?style=flat-square&label=Downloads" alt="Downloads"></a>
 </p>
 
 <p align="center">
@@ -44,10 +31,6 @@ Maintained by [aipieksel](https://github.com/aipieksel). Upstream credits and li
   <a href="#what-it-does">What it does</a> -
   <a href="#permissions">Permissions</a> -
   <a href="#contributing">Contributing</a>
-</p>
-
-<p align="center">
-  <sub>Want more open source? Try <a href="https://github.com/momenbasel/pesty"><b>Pesty</b></a> - a free, native clipboard manager for macOS.</sub>
 </p>
 
 ---
@@ -181,9 +164,7 @@ Give it a minute to re-seed, then open PureMac once. If it still sticks, a resta
 
 ## Screenshots
 
-Retained upstream reference images show the dashboard, breakdown, and onboarding. They are illustrative; the current local fork has only build verification.
-
-![Onboarding](screenshots/onboarding.png)
+The dashboard and breakdown images above are retained upstream reference images. They are illustrative; the current local fork has only source-level build and fixture verification.
 
 ## Architecture
 
@@ -239,22 +220,6 @@ Especially welcome:
 - **[@fengcheng01](https://github.com/fengcheng01)** - App uninstaller feature request ([#28](https://github.com/momenbasel/PureMac/issues/28))
 - **[@scholzfuni](https://github.com/scholzfuni)** - Modularization proposal ([#23](https://github.com/momenbasel/PureMac/issues/23))
 - **[@Zonharo](https://github.com/Zonharo)** - In-app auto-update request ([#94](https://github.com/momenbasel/PureMac/issues/94))
-
-## Star History
-
-If PureMac saved you some disk space, a star helps other people find it.
-
-<a href="https://star-history.com/#momenbasel/PureMac&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=momenbasel/PureMac&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=momenbasel/PureMac&type=Date" />
-    <img alt="PureMac star history chart" src="https://api.star-history.com/svg?repos=momenbasel/PureMac&type=Date" width="720" />
-  </picture>
-</a>
-
-## More open source
-
-- **[Pesty](https://github.com/momenbasel/pesty)** - a free, open-source clipboard manager for macOS. Color-coded history, pinboards, instant search, keyboard-fast paste. Signed, notarized, `brew install --cask momenbasel/pesty/pesty`.
 
 ## License
 
