@@ -1,0 +1,83 @@
+name: PureMac
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: 2.0.0
+options:
+  bundleIdPrefix: com.puremac
+  deploymentTarget:
+    macOS: "13.0"
+  xcodeVersion: "16.4"
+  createIntermediateGroups: true
+  defaultConfig: Release
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+    ARCHS: "arm64 x86_64"
+    ONLY_ACTIVE_ARCH: "NO"
+    CODE_SIGN_IDENTITY: "Apple Development"
+    CODE_SIGN_STYLE: "Automatic"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_ENTITLEMENTS: "PureMac/PureMac.entitlements"
+    INFOPLIST_FILE: "PureMac/Info.plist"
+    PRODUCT_BUNDLE_IDENTIFIER: "com.puremac.app"
+    MARKETING_VERSION: "2.9.2"
+    CURRENT_PROJECT_VERSION: "23"
+    GENERATE_INFOPLIST_FILE: "NO"
+    ASSETCATALOG_COMPILER_APPICON_NAME: "AppIcon"
+    COMBINE_HIDPI_IMAGES: "YES"
+
+targets:
+  PureMac:
+    type: application
+    platform: macOS
+    sources:
+      - PureMac
+    dependencies:
+      - package: Sparkle
+        product: Sparkle
+    settings:
+      base:
+        PRODUCT_NAME: PureMac
+        SWIFT_EMIT_LOC_STRINGS: "YES"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks"
+      configs:
+        Debug:
+          # Full Disk Access is bound to an app's designated code requirement.
+          # An unsigned Debug build receives a new ad-hoc identity whenever it
+          # is rebuilt, so macOS cannot attach or retain the user's FDA grant.
+          # Set your own DEVELOPMENT_TEAM/signing identity for signed local builds.
+          CODE_SIGNING_ALLOWED: "YES"
+          CODE_SIGNING_REQUIRED: "YES"
+          CODE_SIGN_STYLE: "Manual"
+          CODE_SIGN_IDENTITY: "Apple Development"
+          DEVELOPMENT_TEAM: ""
+
+  PureMacTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - PureMacTests
+    dependencies:
+      - target: PureMac
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.puremac.app.tests"
+        CODE_SIGN_ENTITLEMENTS: ""
+        CODE_SIGNING_ALLOWED: "YES"
+        CODE_SIGNING_REQUIRED: "YES"
+        CODE_SIGN_STYLE: "Manual"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        DEVELOPMENT_TEAM: ""
+
+schemes:
+  PureMac:
+    build:
+      targets:
+        PureMac: all
+        PureMacTests: [test]
+    test:
+      targets:
+        - name: PureMacTests
