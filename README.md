@@ -1,103 +1,14 @@
-# PureMac — local source fork
+# PureMac
 
-Maintained by [aipieksel](https://github.com/aipieksel). Upstream credits and licenses remain with their respective authors. Upstream: [momenbasel/PureMac](https://github.com/momenbasel/PureMac).
+Maintained by [aipieksel](https://github.com/aipieksel). This is a local source fork of [momenbasel/PureMac](https://github.com/momenbasel/PureMac); upstream credits and licenses remain with their respective authors.
 
-<p align="center">
+PureMac is a native macOS cleaner and app uninstaller that helps you understand where storage is going before you remove anything. It scans installed apps and related files, leftover app data, caches, development artifacts, and other storage categories. Results show paths for review; removal behavior depends on the selected action, so read the [safety notes](#safety-and-privacy) before cleaning.
 
-  <img src="screenshot.png" alt="PureMac dashboard — animated storage health ring and live composition donut" width="820">
-</p>
+This fork adds a Space Table for exploring volumes and folders in a sortable view. The Homebrew cask and upstream release linked below install upstream PureMac; build this checkout to use changes in the local source fork. The app has no subscription or built-in telemetry. Scanning and cleaning are local; update checks can use the network.
 
-<p align="center">
-  <img src="screenshots/breakdown.png" alt="PureMac scan results — by-category breakdown chart" width="820">
-</p>
+<p align="center"><img src="screenshot.png" alt="PureMac dashboard with storage overview" width="820"></p>
 
-<h1 align="center">PureMac</h1>
-
-<p align="center">
-  <b>Reclaim your Mac.</b><br>
-  Free, open-source uninstaller and cleaner for macOS. No subscription, no telemetry, no upsell.
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/macOS-13.0+-blue?style=flat-square" alt="macOS 13.0+">
-  <img src="https://img.shields.io/badge/telemetry-none-success?style=flat-square" alt="No telemetry">
-</p>
-
-<p align="center">
-  <a href="#install">Install</a> -
-  <a href="#why-this-exists">Why this exists</a> -
-  <a href="#how-it-compares">How it compares</a> -
-  <a href="#our-promise">Our promise</a> -
-  <a href="#what-it-does">What it does</a> -
-  <a href="#permissions">Permissions</a> -
-  <a href="#contributing">Contributing</a>
-</p>
-
----
-
-## Install
-
-The Homebrew command and release link below install upstream PureMac. They do not include uncommitted changes in this checkout.
-
-```bash
-brew install --cask puremac
-```
-
-Or download an app from [upstream Releases](https://github.com/momenbasel/PureMac/releases/latest) and follow that release’s installation instructions. Signing, notarization, and supported architectures depend on the downloaded artifact.
-
-For this checkout, follow [Local build and installation](docs/LOCAL-BUILD.md). The local script builds for the current Mac’s architecture and signs ad-hoc unless `PUREMAC_SIGN_IDENTITY` is set. It does not search the keychain for a personal signing identity and does not notarize the app.
-
-### Build from source
-
-```bash
-brew install xcodegen
-# From this local source folder
-xcodegen generate
-xcodebuild -project PureMac.xcodeproj -scheme PureMac -configuration Release \
-  -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
-open build/Build/Products/Release/PureMac.app
-```
-
-## How it compares
-
-|  | **PureMac** | CleanMyMac | Pearcleaner | Mole | OnyX |
-|---|:---:|:---:|:---:|:---:|:---:|
-| Price | **Free** | $40+/yr | Free | CLI free / GUI paid | Free |
-| Open source | **Yes (MIT)** | No | Source-available¹ | CLI only | No |
-| Native Mac GUI | **Yes** | Yes | Yes | Terminal-first | Yes |
-| No telemetry | **Yes** | No | Yes | Yes | Yes |
-| No subscription | **Yes** | No | Yes | — | Yes |
-| Signed + notarized | Depends on build | Yes | Yes | — | Yes |
-| App uninstaller + orphans | **Yes** | Yes | Yes | Partial | No |
-| Trash-only (recoverable) | No; depends on action | Partial | Yes | Partial | No |
-| Honest about purgeable space | **Yes** | No | n/a | n/a | n/a |
-
-<sub>¹ Pearcleaner is Apache 2.0 **+ Commons Clause** - source-available but not OSI-approved (you may not sell it). PureMac is true MIT. Comparison reflects publicly documented features as of 2026; corrections welcome via PR.</sub>
-
-## Our promise
-
-A Mac cleaner asks for the deepest permission macOS grants - Full Disk Access - and then deletes your files. That demands a level of trust the category has spent twenty years burning. Here's the contract PureMac holds itself to, and you can verify every line of it in the source:
-
-- **Removal depends on the action.** App Uninstaller, Orphan Finder, and Space Table use the macOS Trash API. Cleaner actions can permanently delete files, empty Trash, or run Docker pruning. Binary thinning and language cleanup modify app bundles. These actions are not recoverable from Trash.
-- **No telemetry or analytics.** The current app has no usage analytics or automatic crash-report uploads. Scanning and cleaning run locally. “Check for Updates” opens the upstream GitHub Releases page, or uses Sparkle when a feed is configured; those requests require network access.
-- **No fake urgency.** No dramatized "47 GB of junk detected!" badge, no red alarm counters, no "your Mac is at risk." We show you neutral facts and let you decide.
-- **No overpromising.** We don't claim to "reclaim purgeable space," "boost RAM," or "speed up your Mac" - things no app can reliably do. See the purgeable-space note below.
-- **Review results and scheduling settings.** Interactive results expose file paths, with confirmation enabled by default. Optional scheduled auto-cleaning can remove eligible items without a fresh review. Path exclusions reduce risk but do not make every cleanup reversible.
-- **Auditable.** It's MIT. The exact code that decides what gets removed is in [`PureMac/Services`](PureMac/Services) and [`PureMac/Logic/Scanning`](PureMac/Logic/Scanning). Read it. Fork it. Ship your own.
-
-If PureMac ever adds telemetry, a paywall on core features, or a fear-based scan, it will have become the thing it was built to replace. Hold us to this.
-
-## Why this exists
-
-Apple sells base-model Macs with 256 GB SSDs that you can't upgrade. The Mac mini, the Air, every entry-level MacBook Pro - the drive is soldered down. The next storage tier costs more than a midrange Windows laptop. Once you've paid it, every gigabyte you've already bought matters.
-
-Most Mac cleaners are subscription apps that hide their disk usage behind a paywall, ship telemetry by default, and trade on FUD ("47 GB of junk detected!"). PureMac is the opposite:
-
-- **One-time install.** No subscription, no trial, no account.
-- **No telemetry.** Scans run locally; update checks can use the network.
-- **Open source under MIT.** Read the code, fork it, audit it.
-- **Honest scans.** "Junk" means actually-junk: cache directories the OS itself would purge, orphaned files left by apps you've already deleted, broken installer receipts, that 4 GB Xcode DerivedData blob from 2023.
-- **App-related file discovery.** Review preferences, caches, containers, launch agents, and logs matched to an app. Matching is heuristic and can miss files or include unrelated ones.
+<p align="center"><img src="screenshots/breakdown.png" alt="PureMac scan breakdown by category" width="820"></p>
 
 ## What it does
 
@@ -121,7 +32,7 @@ Smart Scan uses bounded concurrency, with two category workers by default. Each 
 - **Node Cache** - npm, yarn classic, pnpm content-addressable store
 - **Docker Cache** - images, containers, build cache
 
-> **On "purgeable space":** PureMac shows your APFS purgeable space in the storage breakdown for transparency, but it deliberately does **not** list it as junk to delete. Purgeable space is reserved and reclaimed by macOS itself - no third-party app can reliably free it, and even the Finder's purgeable figure is known to be inaccurate. Cleaners that claim to "reclaim purgeable space" are overpromising. We'd rather be honest than impressive.
+> **APFS purgeable space:** PureMac lists this as a separate cleanable category and uses `diskutil apfs purgePurgeable /` when it is selected. This asks macOS to reclaim eligible space; it does not delete a named file or guarantee that the displayed estimate will become free space.
 
 ### Space Table (local source fork)
 
@@ -129,10 +40,41 @@ The added **Space Table** view discovers browsable volumes and shows their used,
 
 Folder previews and background indexing make deeper locations available as scanning proceeds. A per-volume cache saves measured directory results for later use and invalidates them when the volume changes enough or selected items are removed. You can select eligible items and move them to the macOS Trash after a confirmation. Scanning can be cancelled, and protected paths are excluded from removal.
 
-This feature is present in the local source fork described here. The upstream Homebrew cask and release download above do not include these uncommitted changes.
+This feature is in this source fork. Build this checkout to use it; the upstream Homebrew cask and release download do not include it.
 
 ### Scheduled Cleaning
 Optional. Configurable interval (hourly to monthly), with auto-clean threshold so background runs only fire when there's something meaningful to remove.
+
+## Safety and privacy
+
+PureMac shows paths before interactive removal, but actions have different recovery options. App Uninstaller, Orphan Finder, and Space Table use the macOS Trash API. Cleaner actions can permanently delete files, empty Trash, or prune Docker data; binary thinning and language cleanup modify app bundles. Review each selection before confirming. Optional scheduled cleaning can run without a fresh review.
+
+Scanning and cleaning run locally without telemetry or automatic crash uploads. Update checks and opening upstream release pages use the network. Full Disk Access increases scan coverage but also grants access to sensitive files, so grant it only if you trust the app and need those scans. The source for removal decisions is under [`PureMac/Services`](PureMac/Services) and [`PureMac/Logic/Scanning`](PureMac/Logic/Scanning).
+
+APFS decides how much purgeable space can actually be reclaimed. App-related file matching is heuristic and can miss related files or include unrelated ones.
+
+## Install
+
+The Homebrew command and release link below install upstream PureMac. They do not include this fork’s Space Table.
+
+```bash
+brew install --cask puremac
+```
+
+Or download an app from [upstream Releases](https://github.com/momenbasel/PureMac/releases/latest) and follow that release’s installation instructions. Signing, notarization, and supported architectures depend on the downloaded artifact.
+
+For this checkout, follow [Local build and installation](docs/LOCAL-BUILD.md). The local script builds for the current Mac’s architecture and signs ad-hoc unless `PUREMAC_SIGN_IDENTITY` is set. It does not search the keychain for a personal signing identity and does not notarize the app.
+
+### Build from source
+
+```bash
+brew install xcodegen
+# From this local source folder
+xcodegen generate
+xcodebuild -project PureMac.xcodeproj -scheme PureMac -configuration Release \
+  -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+open build/Build/Products/Release/PureMac.app
+```
 
 ## Permissions
 
@@ -147,24 +89,13 @@ What PureMac does *not* do:
 
 ## Troubleshooting
 
-### Launchpad / Dock shows a stale or dull PureMac icon
+### Launchpad or Dock shows an old icon
 
-macOS aggressively caches app icons in LaunchServices. After a Homebrew **reinstall or upgrade** the Dock and Launchpad can keep showing the old cached icon. PureMac's cask now runs `lsregister -f` on install to refresh it automatically, but if a stale icon persists, reset the cache manually:
-
-```bash
-# Clear the icon caches and rebuild the LaunchServices database
-sudo rm -rfv /Library/Caches/com.apple.iconservices.store
-sudo find /private/var/folders/ \( -name com.apple.dock.iconcache -or -name com.apple.iconservices \) -exec rm -rfv {} \; 2>/dev/null
-/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister \
-  -kill -r -domain local -domain user -domain system
-killall Dock; killall Finder
-```
-
-Give it a minute to re-seed, then open PureMac once. If it still sticks, a restart (or Safe Mode boot) forces a full rebuild.
+macOS may retain an icon after reinstalling or upgrading. Open the installed app once and allow the Dock to refresh; a restart can clear a persistent cache. Check the installed artifact before troubleshooting the local source fork.
 
 ## Screenshots
 
-The dashboard and breakdown images above are retained upstream reference images. They are illustrative; the current local fork has only source-level build and fixture verification.
+The images above show the upstream design. Build and inspect this checkout to verify the local fork on your Mac.
 
 ## Architecture
 
